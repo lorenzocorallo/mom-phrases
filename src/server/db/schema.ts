@@ -12,11 +12,12 @@ import { index, int, sqliteTableCreator, text } from "drizzle-orm/sqlite-core";
  */
 export const createTable = sqliteTableCreator((name) => `mom-phrases_${name}`);
 
-export const posts = createTable(
-  "post",
+export const phrases = createTable(
+  "phrase",
   {
     id: int("id", { mode: "number" }).primaryKey({ autoIncrement: true }),
-    name: text("name", { length: 256 }),
+    desc: text("desc", { length: 256 }).notNull(),
+    count: int("count").default(1),
     createdAt: int("created_at", { mode: "timestamp" })
       .default(sql`(unixepoch())`)
       .notNull(),
@@ -25,6 +26,6 @@ export const posts = createTable(
     ),
   },
   (example) => ({
-    nameIndex: index("name_idx").on(example.name),
+    descIndex: index("desc_idx").on(example.desc),
   })
 );
