@@ -1,17 +1,32 @@
 "use client";
 
-import { useState } from "react";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
+import { useDebouncedCallback } from "use-debounce";
 
 export function Filter() {
-  const [filter, setFilter] = useState("");
+  const pathname = usePathname();
+  const searchParams = useSearchParams();
+  const router = useRouter();
+
+  const handleSearch = useDebouncedCallback((value: string) => {
+    const params = new URLSearchParams(searchParams);
+
+    if (value) {
+      params.set("query", value);
+    } else {
+      params.delete("query");
+    }
+
+    router.replace(`${pathname}?${params.toString()}`);
+  }, 300);
 
   return (
     <input
       type="text"
       className="w-full max-w-md rounded bg-white px-4 py-2 text-black outline-none"
       placeholder="Cerca..."
-      value={filter}
-      onChange={(e) => setFilter(e.target.value)}
+      onChange={(e) => handleSearch(e.target.value)}
+      defaultValue={searchParams.get("query")?.toString()}
     />
   );
 }

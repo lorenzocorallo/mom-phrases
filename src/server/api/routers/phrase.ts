@@ -1,4 +1,4 @@
-import { eq, sql } from "drizzle-orm";
+import { eq, like, sql } from "drizzle-orm";
 import { z } from "zod";
 
 import { createTRPCRouter, publicProcedure } from "~/server/api/trpc";
@@ -22,11 +22,16 @@ export const phraseRouter = createTRPCRouter({
         .where(eq(phrases.id, input.id));
     }),
 
-  getAll: publicProcedure.query(async ({ ctx }) => {
-    return await ctx.db.query.phrases.findMany({
-      orderBy: (phrases, { desc }) => [desc(phrases.createdAt)],
-    })
-  }),
+  get: publicProcedure
+    .input(z.object({ query: z.string().max(256).nullable() }))
+    .query(async ({ ctx, input }) => {
+      return await ctx.db.query.phrases.findMany({
+        orderBy: (phrases, { desc }) => [desc(phrases.createdAt)],
+        where: input.query
+          ? like(phrases.desc, `%${input.query.split(" ").join(" %")}%`)
+          : undefined,
+      });
+    }),
 
   getLatest: publicProcedure.query(async ({ ctx }) => {
     const phrase = await ctx.db.query.phrases.findFirst({

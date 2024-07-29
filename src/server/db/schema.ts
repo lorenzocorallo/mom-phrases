@@ -17,7 +17,7 @@ export const phrases = createTable(
   {
     id: int("id", { mode: "number" }).primaryKey({ autoIncrement: true }),
     desc: text("desc", { length: 256 }).notNull(),
-    count: int("count").default(1),
+    count: int("count").default(1).notNull(),
     createdAt: int("created_at", { mode: "timestamp" })
       .default(sql`(unixepoch())`)
       .notNull(),
