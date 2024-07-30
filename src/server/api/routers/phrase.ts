@@ -13,12 +13,21 @@ export const phraseRouter = createTRPCRouter({
       });
     }),
 
-  increment: publicProcedure
-    .input(z.object({ id: z.number(), number: z.number().min(1) }))
+  decrement: publicProcedure
+    .input(z.object({ id: z.number(), number: z.number().min(1).nonnegative() }))
     .mutation(async ({ ctx, input }) => {
       await ctx.db
         .update(phrases)
-        .set({ count: sql`${phrases.count} +${input.number}` })
+        .set({ count: sql`Max(${phrases.count} - ${input.number}, 1)` })
+        .where(eq(phrases.id, input.id));
+    }),
+
+  increment: publicProcedure
+    .input(z.object({ id: z.number(), number: z.number().min(1).nonnegative() }))
+    .mutation(async ({ ctx, input }) => {
+      await ctx.db
+        .update(phrases)
+        .set({ count: sql`${phrases.count} + ${input.number}` })
         .where(eq(phrases.id, input.id));
     }),
 
