@@ -12,7 +12,7 @@ export async function PhraseList({ query }: Props) {
   return (
     <div className="flex flex-1 w-full flex-col items-center justify-start gap-4">
       {data.length ? data.map((row) => (
-        <Phrase desc={row.desc} count={row.count} key={row.id} />
+        <Phrase id={row.id} desc={row.desc} count={row.count} key={row.id} />
       )) : <CreatePhraseBtn query={query} />}
     </div>
   );
