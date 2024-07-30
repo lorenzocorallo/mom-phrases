@@ -29,3 +29,6 @@ export const phrases = createTable(
     descIndex: index("desc_idx").on(example.desc),
   })
 );
+
+export type PhraseSelect = typeof phrases.$inferSelect;
+export type PhraseInsert = typeof phrases.$inferInsert;

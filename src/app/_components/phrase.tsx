@@ -1,6 +1,7 @@
 "use client";
 
 import { ChevronDown, ChevronUp } from "lucide-react";
+import Link from "next/link";
 
 interface Props {
   id: number;
@@ -8,11 +9,11 @@ interface Props {
   count: number;
 }
 
-export function Phrase({ desc, count }: Props) {
+export function Phrase({ id, desc, count }: Props) {
   return (
     <div className="grid w-full max-w-md grid-cols-[1fr,auto] items-start justify-between gap-2">
-      <div
-        // href={`/phrase/${id}`}
+      <Link
+        href={`/phrase/${id}`}
         className="flex h-full items-center rounded bg-slate-200/10 p-3"
       >
         <p>
@@ -21,7 +22,7 @@ export function Phrase({ desc, count }: Props) {
           </span>{" "}
           {desc}
         </p>
-      </div>
+      </Link>
       <div className="flex flex-col gap-2">
         <button className="flex aspect-square flex-col items-center justify-center rounded-md bg-green-500/60 p-1">
           <ChevronUp />

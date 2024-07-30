@@ -22,16 +22,24 @@ export const phraseRouter = createTRPCRouter({
         .where(eq(phrases.id, input.id));
     }),
 
-  get: publicProcedure
+  getAll: publicProcedure
     .input(z.object({ query: z.string().max(256).nullable() }))
     .query(async ({ ctx, input }) => {
       return await ctx.db.query.phrases.findMany({
-        orderBy:  [desc(phrases.count), desc(phrases.createdAt)],
+        orderBy: [desc(phrases.count), desc(phrases.createdAt)],
         where: input.query
           ? like(phrases.desc, `%${input.query.split(" ").join(" %")}%`)
           : undefined,
       });
     }),
+
+  get: publicProcedure
+    .input(z.object({ id: z.number().nonnegative() }))
+    .query(async ({ ctx, input }) => {
+    return await ctx.db.query.phrases.findFirst({
+      where: eq(phrases.id, input.id)
+    })
+  }),
 
   getLatest: publicProcedure.query(async ({ ctx }) => {
     const phrase = await ctx.db.query.phrases.findFirst({

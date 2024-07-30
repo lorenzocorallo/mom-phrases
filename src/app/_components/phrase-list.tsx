@@ -7,7 +7,7 @@ interface Props {
 }
 
 export async function PhraseList({ query }: Props) {
-  const data = await api.phrase.get({ query: query ?? null });
+  const data = await api.phrase.getAll({ query: query ?? null });
 
   return (
     <div className="flex flex-1 w-full flex-col items-center justify-start gap-4">
