@@ -14,7 +14,9 @@ export const phraseRouter = createTRPCRouter({
     }),
 
   decrement: publicProcedure
-    .input(z.object({ id: z.number(), number: z.number().min(1).nonnegative() }))
+    .input(
+      z.object({ id: z.number(), number: z.number().min(1).nonnegative() }),
+    )
     .mutation(async ({ ctx, input }) => {
       await ctx.db
         .update(phrases)
@@ -23,11 +25,32 @@ export const phraseRouter = createTRPCRouter({
     }),
 
   increment: publicProcedure
-    .input(z.object({ id: z.number(), number: z.number().min(1).nonnegative() }))
+    .input(
+      z.object({
+        id: z.number().nonnegative(),
+        number: z.number().min(1).nonnegative(),
+      }),
+    )
     .mutation(async ({ ctx, input }) => {
       await ctx.db
         .update(phrases)
         .set({ count: sql`${phrases.count} + ${input.number}` })
+        .where(eq(phrases.id, input.id));
+    }),
+
+  update: publicProcedure
+    .input(
+      z.object({
+        id: z.number().nonnegative(),
+        desc: z.string(),
+        count: z.number().min(1).nonnegative(),
+      }),
+    )
+    .mutation(async ({ ctx, input }) => {
+      const { desc, count } = input;
+      await ctx.db
+        .update(phrases)
+        .set({ desc, count })
         .where(eq(phrases.id, input.id));
     }),
 
@@ -45,10 +68,10 @@ export const phraseRouter = createTRPCRouter({
   get: publicProcedure
     .input(z.object({ id: z.number().nonnegative() }))
     .query(async ({ ctx, input }) => {
-    return await ctx.db.query.phrases.findFirst({
-      where: eq(phrases.id, input.id)
-    })
-  }),
+      return await ctx.db.query.phrases.findFirst({
+        where: eq(phrases.id, input.id),
+      });
+    }),
 
   getLatest: publicProcedure.query(async ({ ctx }) => {
     const phrase = await ctx.db.query.phrases.findFirst({
