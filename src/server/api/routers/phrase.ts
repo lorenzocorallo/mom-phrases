@@ -14,11 +14,11 @@ export const phraseRouter = createTRPCRouter({
     }),
 
   increment: publicProcedure
-    .input(z.object({ id: z.number(), count: z.number().min(1) }))
+    .input(z.object({ id: z.number(), number: z.number().min(1) }))
     .mutation(async ({ ctx, input }) => {
       await ctx.db
         .update(phrases)
-        .set({ count: sql`${phrases.count} +${input.count}` })
+        .set({ count: sql`${phrases.count} +${input.number}` })
         .where(eq(phrases.id, input.id));
     }),
 

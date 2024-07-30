@@ -2,6 +2,7 @@
 
 import { ChevronDown, ChevronUp } from "lucide-react";
 import Link from "next/link";
+import { incrementCount } from "~/server/actions";
 
 interface Props {
   id: number;
@@ -24,7 +25,12 @@ export function Phrase({ id, desc, count }: Props) {
         </p>
       </Link>
       <div className="flex flex-col gap-2">
-        <button className="flex aspect-square flex-col items-center justify-center rounded-md bg-green-500/60 p-1">
+        <button
+          onClick={async () => {
+            await incrementCount(id, 1);
+          }}
+          className="flex aspect-square flex-col items-center justify-center rounded-md bg-green-500/60 p-1"
+        >
           <ChevronUp />
         </button>
         <button
