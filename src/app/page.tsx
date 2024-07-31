@@ -3,6 +3,8 @@ import { Suspense } from "react";
 import { PhraseList } from "./_components/phrase-list";
 import { PhraseListSkeleton } from "./_components/phrase-list-skeleton";
 
+export const dynamic = "force-dynamic";
+
 export default async function Home({
   searchParams,
 }: {
