@@ -40,7 +40,7 @@ export function EditPhrase({ original }: Props) {
           value={desc}
           id="desc"
           onChange={(e) => setDesc(e.target.value)}
-          className="w-full max-w-md rounded bg-white px-4 py-2 text-black outline-none"
+          className="w-full max-w-md rounded bg-white/20 px-4 py-2 text-white outline-none"
         />
       </div>
 
@@ -75,7 +75,7 @@ export function EditPhrase({ original }: Props) {
             id="count"
             onChange={(e) => handleCountChange(e.target.value)}
             onBlur={handleFixCount}
-            className="w-24 rounded bg-white px-4 py-2 text-center text-black outline-none"
+            className="w-24 rounded bg-white/20 px-4 py-2 text-center text-white outline-none"
           />
           <button
             className="flex w-12 items-center justify-center rounded bg-green-600/60 text-white hover:bg-green-600/80"
