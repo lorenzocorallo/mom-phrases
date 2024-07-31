@@ -2,7 +2,7 @@
 
 import { Minus, Plus } from "lucide-react";
 import { useState } from "react";
-import { update } from "~/server/actions";
+import { updatePhrase } from "~/server/actions";
 import type { PhraseSelect } from "~/server/db/schema";
 
 interface Props {
@@ -28,7 +28,7 @@ export function EditPhrase({ original }: Props) {
   }
 
   async function handleSave() {
-    await update({ ...original, desc, count: Number(count) })
+    await updatePhrase({ ...original, desc, count: Number(count) });
   }
 
   return (

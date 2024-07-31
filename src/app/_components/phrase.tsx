@@ -3,7 +3,7 @@
 import { ChevronDown, ChevronUp } from "lucide-react";
 import Link from "next/link";
 import { useState } from "react";
-import { decrementCount, incrementCount } from "~/server/actions";
+import { decrementPhraseCount, incrementPhraseCount } from "~/server/actions";
 
 interface Props {
   id: number;
@@ -31,7 +31,7 @@ export function Phrase({ id, desc, count: originalCount }: Props) {
         <button
           onClick={async () => {
             setCount(prev => prev + 1);
-            await incrementCount(id, 1);
+            await incrementPhraseCount(id, 1);
           }}
           className="flex aspect-square flex-col items-center justify-center rounded-md bg-green-500/60 p-1 hover:bg-green-500/80 transition-colors"
         >
@@ -42,7 +42,7 @@ export function Phrase({ id, desc, count: originalCount }: Props) {
           disabled={count <= 1}
           onClick={async () => {
             setCount(prev => prev - 1);
-            await decrementCount(id, 1);
+            await decrementPhraseCount(id, 1);
           }}
         >
           <ChevronDown />
