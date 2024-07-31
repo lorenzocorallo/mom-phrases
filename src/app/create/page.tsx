@@ -2,6 +2,8 @@ import { api } from "~/trpc/server";
 import { z } from "zod";
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
+import Link from "next/link";
+import { ArrowLeft } from "lucide-react";
 
 const FormSchema = z.object({
   desc: z.string().max(256),
@@ -30,6 +32,7 @@ export default async function Page({
   return (
     <main className="flex min-h-screen flex-col items-center justify-center bg-gradient-to-b from-[#2e026d] to-[#15162c] text-white">
       <div className="contaier flex flex-1 flex-col items-center justify-start gap-8 px-4 py-16">
+        <Link href="/" className="underline self-start flex items-center justify-center"><ArrowLeft size={18} /> Homepage</Link>
         <h1 className="text-2xl font-bold">Crea una nuova Phrase</h1>
         <form action={mutate} className="flex flex-col gap-2 items-center">
           <input type="text" className="bg-white/20 p-2 rounded" maxLength={256} defaultValue={query} name="desc" />
