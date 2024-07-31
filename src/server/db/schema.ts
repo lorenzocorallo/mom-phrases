@@ -22,13 +22,29 @@ export const phrases = createTable(
       .default(sql`(unixepoch())`)
       .notNull(),
     updatedAt: int("updated_at", { mode: "timestamp" }).$onUpdate(
-      () => new Date()
+      () => new Date(),
     ),
   },
   (example) => ({
     descIndex: index("desc_idx").on(example.desc),
-  })
+  }),
 );
 
 export type PhraseSelect = typeof phrases.$inferSelect;
 export type PhraseInsert = typeof phrases.$inferInsert;
+
+export const deletedPhrases = createTable(
+  "deleted-phrase",
+  {
+    id: int("id", { mode: "number" }).primaryKey({ autoIncrement: true }),
+    desc: text("desc", { length: 256 }).notNull(),
+    count: int("count").default(1).notNull(),
+    deletedAt: int("deleted_at", { mode: "timestamp" })
+      .default(sql`(unixepoch())`)
+      .notNull(),
+    createdAt: int("created_at", { mode: "timestamp" }).notNull(),
+    updatedAt: int("updated_at", { mode: "timestamp" }).$onUpdate(
+      () => new Date(),
+    ),
+  },
+);

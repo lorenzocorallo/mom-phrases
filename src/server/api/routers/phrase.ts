@@ -2,7 +2,7 @@ import { desc, eq, like, sql } from "drizzle-orm";
 import { z } from "zod";
 
 import { createTRPCRouter, publicProcedure } from "~/server/api/trpc";
-import { phrases } from "~/server/db/schema";
+import { deletedPhrases, phrases } from "~/server/db/schema";
 
 export const phraseRouter = createTRPCRouter({
   create: publicProcedure
@@ -52,6 +52,13 @@ export const phraseRouter = createTRPCRouter({
         .update(phrases)
         .set({ desc, count })
         .where(eq(phrases.id, input.id));
+    }),
+
+  delete: publicProcedure
+    .input(z.object({ id: z.number().nonnegative() }))
+    .mutation(async ({ ctx, input }) => {
+      const deleted = await ctx.db.delete(phrases).where(eq(phrases.id, input.id)).returning();
+      await ctx.db.insert(deletedPhrases).values(deleted);
     }),
 
   getAll: publicProcedure
