@@ -3,6 +3,7 @@
 import { Minus, Plus, Save, Trash } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
+import { toast } from "sonner";
 import { deletePhrase, updatePhrase } from "~/server/actions";
 import type { PhraseSelect } from "~/server/db/schema";
 
@@ -14,7 +15,7 @@ export function EditPhrase({ original }: Props) {
   const [desc, setDesc] = useState<string>(original.desc);
   const [prevCount, setPrevCount] = useState<string | undefined>();
   const [count, setCount] = useState<string>(original.count.toString());
-  
+
   const router = useRouter();
 
   const modified = Number(count) !== original.count || desc !== original.desc;
@@ -36,7 +37,18 @@ export function EditPhrase({ original }: Props) {
 
   async function handleDelete() {
     if (confirm("Sei sicuro di voler eliminare questa frase?")) {
+      const toastId = toast.loading("Cancellando la frase...");
       await deletePhrase(original.id);
+
+      toast.success("Frase cancellata con successo", {
+        id: toastId,
+        duration: 10_000,
+        // action: {
+        //   label: "Annulla",
+        //   onClick: () => console.log("Annullaaaa!"),
+        // },
+      });
+
       router.push("/");
     }
   }
@@ -111,15 +123,15 @@ export function EditPhrase({ original }: Props) {
       <button
         onClick={handleSave}
         disabled={!modified}
-        className="w-full rounded bg-green-600 p-2 transition-colors disabled:bg-slate-700/60 disabled:text-slate-400 flex items-center justify-center gap-2"
+        className="flex w-full items-center justify-center gap-2 rounded bg-green-600 p-2 transition-colors disabled:bg-slate-700/60 disabled:text-slate-400"
       >
         <Save size={18} /> Salva
       </button>
       <button
         onClick={handleDelete}
-        className="w-full rounded bg-red-600 p-2 transition-colors flex items-center justify-center gap-2"
+        className="flex w-full items-center justify-center gap-2 rounded bg-red-600 p-2 transition-colors"
       >
-          <Trash size={18} /> Elimina
+        <Trash size={18} /> Elimina
       </button>
     </div>
   );

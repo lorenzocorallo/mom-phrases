@@ -1,15 +1,17 @@
-import { api } from "~/trpc/server";
+"use client";
+
 import { z } from "zod";
-import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import Link from "next/link";
 import { ArrowLeft } from "lucide-react";
+import { createPhrase } from "~/server/actions";
+import { toast } from "sonner";
 
 const FormSchema = z.object({
   desc: z.string().max(256),
 });
 
-export default async function Page({
+export default function Page({
   searchParams,
 }: {
   searchParams?: {
@@ -19,13 +21,16 @@ export default async function Page({
   const query = searchParams?.query;
 
   const mutate = async (formData: FormData) => {
-    "use server";
     const { desc } = FormSchema.parse({
       desc: formData.get("desc"),
     });
 
-    await api.phrase.create({ desc });
-    revalidatePath("/");
+    toast.promise(createPhrase(desc), {
+      loading: "Creando la frase...",
+      success: "Creata!",
+      error: "Si è verificato un errore.",
+    });
+
     redirect("/");
   };
 
