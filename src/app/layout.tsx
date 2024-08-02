@@ -1,10 +1,10 @@
 import "~/styles/globals.css";
 
-import { GeistSans } from "geist/font/sans";
+import { Inter as FontSans } from "next/font/google";
 import { type Metadata } from "next";
 
 import { TRPCReactProvider } from "~/trpc/react";
-import { HydrateClient } from "~/trpc/server";
+import { cn } from "~/lib/utils";
 
 export const metadata: Metadata = {
   title: "LC | Mom Phrases",
@@ -12,13 +12,23 @@ export const metadata: Metadata = {
   icons: [{ rel: "icon", url: "/favicon.ico" }],
 };
 
+const fontSans = FontSans({
+  subsets: ["latin"],
+  variable: "--font-sans",
+});
+
 export default function RootLayout({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
   return (
-    <html lang="it" className={`${GeistSans.variable}`}>
-      <body className="dark">
-        <TRPCReactProvider><HydrateClient>{children}</HydrateClient></TRPCReactProvider>
+    <html lang="it">
+      <body
+        className={cn(
+          "dark min-h-screen bg-background font-sans antialiased",
+          fontSans.variable,
+        )}
+      >
+        <TRPCReactProvider>{children}</TRPCReactProvider>
       </body>
     </html>
   );
