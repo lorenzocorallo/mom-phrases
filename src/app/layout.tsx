@@ -17,7 +17,7 @@ export default function RootLayout({
 }: Readonly<{ children: React.ReactNode }>) {
   return (
     <html lang="it" className={`${GeistSans.variable}`}>
-      <body>
+      <body className="dark">
         <TRPCReactProvider><HydrateClient>{children}</HydrateClient></TRPCReactProvider>
       </body>
     </html>
