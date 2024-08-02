@@ -4,7 +4,7 @@ import { Minus, Plus, Save, Trash } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { toast } from "sonner";
-import { deletePhrase, updatePhrase } from "~/server/actions";
+import { deletePhrase, restorePhrase, updatePhrase } from "~/server/actions";
 import type { PhraseSelect } from "~/server/db/schema";
 
 interface Props {
@@ -43,10 +43,17 @@ export function EditPhrase({ original }: Props) {
       toast.success("Frase cancellata con successo", {
         id: toastId,
         duration: 10_000,
-        // action: {
-        //   label: "Annulla",
-        //   onClick: () => console.log("Annullaaaa!"),
-        // },
+        richColors: true,
+        action: {
+          label: "Annulla",
+          onClick: () => {
+            toast.promise(restorePhrase(original.id), {
+              loading: "Ripristinando la frase eliminata",
+              success: "Frase ripristinata con successo",
+              richColors: true,
+            });
+          },
+        },
       });
 
       router.push("/");

@@ -32,3 +32,8 @@ export async function deletePhrase(id: number) {
   revalidatePath("/");
   revalidatePath(`/phase/${id}`);
 }
+
+export async function restorePhrase(id: number) {
+  await api.phrase.restore({ id });
+  revalidatePath("/");
+}

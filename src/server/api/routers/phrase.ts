@@ -57,8 +57,31 @@ export const phraseRouter = createTRPCRouter({
   delete: publicProcedure
     .input(z.object({ id: z.number().nonnegative() }))
     .mutation(async ({ ctx, input }) => {
-      const deleted = await ctx.db.delete(phrases).where(eq(phrases.id, input.id)).returning();
+      const deleted = await ctx.db
+        .delete(phrases)
+        .where(eq(phrases.id, input.id))
+        .returning();
       await ctx.db.insert(deletedPhrases).values(deleted);
+    }),
+
+  restore: publicProcedure
+    .input(z.object({ id: z.number().nonnegative() }))
+    .mutation(async ({ ctx, input }) => {
+      const [deleted] = await ctx.db
+        .delete(deletedPhrases)
+        .where(eq(deletedPhrases.id, input.id))
+        .returning();
+
+      if (!deleted) throw new Error("Not Found");
+
+      await ctx.db
+        .insert(phrases)
+        .values({
+          desc: deleted.desc,
+          count: deleted.count,
+          createdAt: deleted.createdAt,
+          updatedAt: deleted.updatedAt,
+        });
     }),
 
   getAll: publicProcedure
