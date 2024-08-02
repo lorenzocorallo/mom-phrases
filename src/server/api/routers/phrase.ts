@@ -95,6 +95,17 @@ export const phraseRouter = createTRPCRouter({
       });
     }),
 
+  getAllDeleted: publicProcedure
+    .input(z.object({ query: z.string().max(256).nullable() }))
+    .query(async ({ ctx, input }) => {
+      return await ctx.db.query.deletedPhrases.findMany({
+        orderBy: [desc(deletedPhrases.id), desc(deletedPhrases.deletedAt)],
+        where: input.query
+          ? like(deletedPhrases.desc, `%${input.query.split(" ").join(" %")}%`)
+          : undefined,
+      });
+    }),
+
   get: publicProcedure
     .input(z.object({ id: z.number().nonnegative() }))
     .query(async ({ ctx, input }) => {
