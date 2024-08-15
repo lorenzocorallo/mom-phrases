@@ -15,6 +15,7 @@ export default async function Home({
   // void api.phrase.get.prefetch();
 
   const query = searchParams?.query;
+  // test
 
   return (
     <div className="contaier flex w-full flex-1 flex-col items-center justify-start gap-8 px-4 py-16">
